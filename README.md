@@ -1,26 +1,91 @@
-# versuchnftmainet
+# MySamuraiNFT: Automated NFT Minting Pipeline
 
-NFT minting script using Ethers.js and Solidity on Base Mainnet.  
-Smart contract uses ERC-721 standard and supports tokenURI.
+This project showcases an end-to-end pipeline for generating, uploading, and minting NFTs on the **Base Mainnet** using JavaScript, Hardhat, and Pinata/IPFS. The workflow includes metadata generation, image upload, contract deployment, minting, and privacy-protected deployment.
 
-## Features
+## 📦 Project Structure
 
-- ERC-721 NFT smart contract (`MyNFT.sol`)
-- IPFS-based metadata (via Pinata)
-- JavaScript script to mint NFTs (`mint.js`)
-- Supports Base Mainnet
+```
+my-nft-project/
+├── contracts/                # Smart contracts (MySamuraiNFT.sol)
+├── imagespinatauno/         # JPEG images to be minted
+├── metadata/                # Metadata files (auto-generated)
+├── node_modules/            # Node dependencies (ignored in repo)
+├── scripts/                 # Deployment and minting scripts
+├── .env                     # Stores private JWT (ignored)
+├── .gitignore               # Prevents uploading secrets and node_modules
+├── cid-map.json             # Maps metadata filenames to CID
+├── image-cids.json          # Maps images to IPFS CIDs
+├── hardhat.config.js        # Hardhat setup
+├── package.json             # Dependencies and scripts
+```
 
-## Technologies
+## 🚀 Features
 
-- Solidity
-- Ethers.js
-- Node.js
-- IPFS (Pinata)
-- GitHub
+* ✅ Upload images to IPFS (Pinata)
+* ✅ Generate matching metadata for each image
+* ✅ Upload metadata to IPFS
+* ✅ Mint all NFTs to a wallet on Base Mainnet
+* ✅ Protect your API secrets with `.env`
 
-## Setup
+## 🔧 Installation
 
-1. Clone the repository
-2. Run `npm install`
-3. Create a `.env` file and add your private key:
+```bash
+git clone https://github.com/valikjr/versuchnftmainet.git
+cd versuchnftmainet
+npm install
+```
+
+## 🔐 Setup `.env`
+
+Create a file named `.env` and add your Pinata JWT:
+
+```
+PINATA_JWT=your_pinata_jwt_token
+```
+
+## 🧪 Usage
+
+### 1. Upload Images to IPFS
+
+Place your `.jpeg` files inside `imagespinatauno/`, then run:
+
+```bash
+node uploadImages.js
+```
+
+### 2. Generate Metadata
+
+```bash
+node generateMetadata.js
+```
+
+### 3. Upload Metadata to IPFS
+
+```bash
+node uploadToPinata.js
+```
+
+### 4. Deploy Smart Contract to Base
+
+```bash
+npx hardhat run scripts/deploy.js --network base
+```
+
+### 5. Mint All NFTs
+
+Edit your contract address in `mint.js`, then run:
+
+```bash
+node scripts/mint.js
+```
+
+## ⚠️ Security
+
+Sensitive files like `.env` and `node_modules/` are excluded via `.gitignore` to ensure no secrets are uploaded to GitHub.
+
+## 📄 License
+
+MIT
+
+---
 
