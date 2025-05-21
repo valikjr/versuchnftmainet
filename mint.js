@@ -1,26 +1,22 @@
 require("dotenv").config();
-const { ethers } = require("ethers");
+const { ethers } = require("hardhat");
+const fs = require("fs");
 
-const RPC_URL = "https://sepolia.base.org";
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
-const CONTRACT_ADDRESS = "0xd9145CCE52D386f254917e481eB44e9943F39138";
-const ABI = [
-  "function mintNFT(address recipient) public returns (uint256)"
-];
+const CONTRACT_ADDRESS = "0x2cFB960445C4b707739E1C694F9f046b5832b882"; // твой адрес контракта
+const WALLET_ADDRESS = "0x100CB390CCB307a15Caa3fe9E99CE9aE8BC8071F"; // адрес получателя
+const cidMap = require("./cid-map.json");
 
 async function main() {
-  const provider = new ethers.JsonRpcProvider(RPC_URL);
-  const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
-  const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, wallet);
+  const provider = new ethers.JsonRpcProvider("https://mainnet.base.org");
+  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+  const contract = await ethers.getContractAt("MySamuraiNFT", CONTRACT_ADDRESS, wallet);
 
-  const recipient = wallet.address;
-  const tx = await contract.mintNFT(recipient);
-  console.log("Transaction sent:", tx.hash);
-
-  const receipt = await tx.wait();
-  console.log("NFT Minted. Transaction hash:", receipt.transactionHash);
+  for (const item of cidMap) {
+    const tokenURI = `ipfs://${item.cid}`;
+    const tx = await contract.mintNFT(WALLET_ADDRESS, tokenURI);
+    await tx.wait();
+    console.log(`✅ Minted NFT with URI: ${tokenURI}`);
+  }
 }
 
-main().catch((error) => {
-  console.error("Error:", error);
-});
+main().catch(console.error);
