@@ -87,5 +87,18 @@ Sensitive files like `.env` and `node_modules/` are excluded via `.gitignore` to
 
 MIT
 
+## 📊 NFT Trait Analyse
+
+Der Ordner [`analytics/`](./analytics) enthält:
+
+- `traitFrequency.json` — Statistik der Merkmale aus den NFT-Metadaten
+- `traitFrequency.png` — Balkendiagramm mit den Top 10 der häufigsten Merkmale
+
+Die Analyse wird automatisch generiert durch:
+
+- `analyzeMetadata.js` — zählt die Häufigkeit der Merkmale
+- `generate_graph.py` — erstellt und speichert das Diagramm als PNG
+
+
 ---
 
