@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "fullmint": "node uploadImages.js && node generateMetadata.js && node updateMetadata.js && node uploadToPinata.js && npx hardhat run scripts/mint.js --network base"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

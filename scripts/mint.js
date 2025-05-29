@@ -1,26 +1,26 @@
-require("dotenv").config();
 const { ethers } = require("hardhat");
-
-const CONTRACT_ADDRESS = "0x6A247fF6409c53Df1147dcf1389dFa4504226087";
-const recipient = "0x100CB390CCB307a15Caa3fe9E99CE9aE8BC8071F";
-const tokenURI = "ipfs://bafybeiezrubbhs6hgjtaeu25pquyqbrhry6wc4mmbtxpl32bwpnccmxidq";
-
-const ABI = [
-  "function mintNFT(address recipient, string memory tokenURI) public returns (uint256)"
-];
+const fs = require("fs");
+require("dotenv").config();
 
 async function main() {
-  const [signer] = await ethers.getSigners();
-  const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+  const contractAddress = "0x2cFB960445C4b707739E1C694F9f046b5832b882"; // твой контракт
+  const walletAddress = "0x100CB390CCB307a15Caa3fe9E99CE9aE8BC8071F"; // твой кошелёк
 
-  const tx = await contract.mintNFT(recipient, tokenURI);
-  console.log("Mint transaction sent:", tx.hash);
+  const contract = await ethers.getContractAt("MySamuraiNFT", contractAddress);
 
-  const receipt = await tx.wait();
-  console.log("✅ NFT Minted! Block:", receipt.blockNumber);
+  const cidMap = JSON.parse(fs.readFileSync("cid-map.json", "utf8"));
+
+  for (const item of cidMap) {
+    const metadataURI = `ipfs://${item.cid}`;
+    const tx = await contract.mintNFT(walletAddress, metadataURI);
+    await tx.wait();
+    console.log(`✅ Minted ${item.file} → ${metadataURI}`);
+  }
+
+  console.log("🏁 All NFTs minted!");
 }
 
 main().catch((error) => {
-  console.error("Minting failed:", error);
+  console.error(error);
   process.exitCode = 1;
 });
